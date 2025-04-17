@@ -3,6 +3,10 @@ import javafx.scene.canvas.*;
 
 public class Player extends DrawableObject
 {
+    // player size
+    private final int radius = 14;
+    private final int diameter = radius * 2;
+
     // players forces
     private double forceX = 0;
     private double forceY = 0;
@@ -23,9 +27,9 @@ public class Player extends DrawableObject
     public void drawMe(float x, float y, GraphicsContext gc)
     {
         gc.setFill(Color.LIME);
-        gc.fillOval(x-14,y-14,27,27);
+        gc.fillOval(x - radius,y - radius,diameter,diameter);
         gc.setFill(Color.GRAY);
-        gc.fillOval(x-13,y-13,25,25);
+        //gc.fillOval(x-radius,y-radius,diameter - 1,diameter - 1);
     }
 
     public void act()
@@ -140,7 +144,21 @@ public class Player extends DrawableObject
         }
     }
 
+    public boolean checkCollision(Mine m)
+    {
+        int collisionDistance = m.getRadius() + this.getRadius();
+        // if the distance between the player and the mine are less than the collisionDistance, collide
+        if(this.distance(m) <= collisionDistance)
+        {
+            // end game screen
+            return true;
+        }
+        return false;
+    }
+
     // accessors
+    public int getRadius(){return this.radius;}
+    public int getDiameter(){return this.diameter;}
     public double getForceX(){return this.forceX;}
     public double getForceY(){return this.forceY;}
     public boolean getAReleased(){return this.A_released;}

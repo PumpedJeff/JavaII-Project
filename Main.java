@@ -32,7 +32,14 @@ public class Main extends Application
    // player and player objects & variables
    Player thePlayer = new Player(300,300);
    Label statsLabel = new Label("Stats");
-   int highScoreVar = 0;
+   private int highScoreVar = 0;
+
+   // test mine & objects
+   Random rand = new Random();
+   ArrayList<Mine> mines = new ArrayList<>();
+   private int mineListSize = 10;
+
+   Mine testMine = new Mine(rand.nextInt(600), rand.nextInt(600));
 
    public void start(Stage stage)
    {
@@ -48,6 +55,9 @@ public class Main extends Application
       catch(FileNotFoundException e)
       {
          System.out.println("file not found");
+      }
+      for(int i = 0; i < mineListSize; i++) {
+         mines.add(new Mine(rand.nextInt(600), rand.nextInt(600)));
       }
 
       // create the flowpane and add the canvas
@@ -173,27 +183,35 @@ public class Main extends Application
    {
       public void handle(long currentTimeInNanoSeconds) 
       {
-         thePlayer.act();
-         // calculate player distance
-         double xSquared = Math.pow(thePlayer.getX() - 300, 2);
-         double ySquared = Math.pow(thePlayer.getY() - 300, 2);
-         int distance = (int)Math.sqrt(xSquared + ySquared);
+         if(!thePlayer.checkCollision(testMine))
+         {
+            thePlayer.act();
+            // calculate player distance
+            double xSquared = Math.pow(thePlayer.getX() - 300, 2);
+            double ySquared = Math.pow(thePlayer.getY() - 300, 2);
+            int distance = (int)Math.sqrt(xSquared + ySquared);
 
-         statsLabel.setText("Score: " + distance + "\nHigh Score: " + highScoreVar + "\nForceX: " + thePlayer.getForceX() + "\nForceY: " + thePlayer.getForceY() + "\nX: " + thePlayer.getX() + "\nY: " + thePlayer.getY());
-         // Accessing WASD command inputs
-         // System.out.println("\nW: " + thePlayer.getWReleased() + "\nA: " + thePlayer.getAReleased() + "\nS: " + thePlayer.getSReleased() + "\nD: " + thePlayer.getDReleased());
+            statsLabel.setText("Score: " + distance + "\nHigh Score: " + highScoreVar);
+            // Accessing WASD command inputs
+            // System.out.println("\nW: " + thePlayer.getWReleased() + "\nA: " + thePlayer.getAReleased() + "\nS: " + thePlayer.getSReleased() + "\nD: " + thePlayer.getDReleased());
 
-         gc.clearRect(0,0,600,600);
-         
-         //USE THIS CALL ONCE YOU HAVE A PLAYER
-         drawBackground(thePlayer.getX(),thePlayer.getY(),gc); 
+            // Accessing ForceX + Y and XY positions
+            // System.out.println("\nForceX: " + thePlayer.getForceX() + "\nForceY: " + thePlayer.getForceY() + "\nX: " + thePlayer.getX() + "\nY: " + thePlayer.getY());
 
-	      //example calls of draw - this should be the player's call for draw
-         thePlayer.draw(300,300,gc,true); //all other objects will use false in the parameter.
-         
-         //example call of a draw where m is a non-player object. Note that you are passing the player's position in and not m's position.
-         //m.draw(thePlayer.getX(),thePlayer.getY(),gc,false);
-         
+            gc.clearRect(0,0,600,600);
+
+            //USE THIS CALL ONCE YOU HAVE A PLAYER
+            drawBackground(thePlayer.getX(),thePlayer.getY(),gc);
+
+             //example calls of draw - this should be the player's call for draw
+            thePlayer.draw(300,300,gc,true); //all other objects will use false in the parameter.
+
+            //example call of a draw where m is a non-player object. Note that you are passing the player's position in and not m's position.
+            testMine.draw(thePlayer.getX(),thePlayer.getY(),gc,false);
+            for(int i = 0; i < mineListSize; i++) {
+               mines.get(i).draw(thePlayer.getX(),thePlayer.getY(),gc,false);
+            }
+         }
       }
    }
    public static void main(String[] args)
