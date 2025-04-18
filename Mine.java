@@ -28,17 +28,16 @@ public class Mine extends DrawableObject
       gc.setFill(new Color(1,color,color,1));
       gc.fillOval(x - radius, y - radius, diameter, diameter);
    }
-   /*
-   public void checkCollision(Player p)
+   public boolean checkCollision(Player p)
    {
       int collisionDistance = p.getRadius() + this.getRadius();
       // if the distance between the player and the mine is less than the collisionDistance, collide
       if(this.distance(p) <= collisionDistance)
       {
-         System.out.println("hit!");
+         return true;
       }
+      return false;
    }
-   */
    // accessors
    public int getRadius(){return radius;}
    public int getDiameter(){return diameter;}

@@ -37,7 +37,7 @@ public class Main extends Application
    // test mine & objects
    Random rand = new Random();
    ArrayList<Mine> mines = new ArrayList<>();
-   private int mineListSize = 10;
+   private int mineListSize = 5;
 
    Mine testMine = new Mine(rand.nextInt(600), rand.nextInt(600));
 
@@ -183,7 +183,7 @@ public class Main extends Application
    {
       public void handle(long currentTimeInNanoSeconds) 
       {
-         if(!thePlayer.checkCollision(testMine))
+         if(!mines.get(1).checkCollision(thePlayer))
          {
             thePlayer.act();
             // calculate player distance

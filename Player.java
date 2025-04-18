@@ -1,5 +1,6 @@
 import javafx.scene.paint.*;
 import javafx.scene.canvas.*;
+import java.util.*;
 
 public class Player extends DrawableObject
 {
@@ -155,6 +156,24 @@ public class Player extends DrawableObject
         }
         return false;
     }
+    /*
+    public boolean checkListCollision(ArrayList<Mine> m)
+    {
+        for(int i = 0; i < m.size(); i++)
+        {
+            int collisionDistance = m.get(i).getRadius() + this.getRadius();
+            // if the distance between the player and the mine are less than the collisionDistance, collide
+            if(this.distance(m.get(i)) <= collisionDistance)
+            {
+                // end game screen
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+     */
 
     // accessors
     public int getRadius(){return this.radius;}
