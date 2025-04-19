@@ -20,7 +20,6 @@ import javafx.scene.image.*;
    4.20.25
 */
 
-
 public class Main extends Application
 {
    // javaFX objects
@@ -37,9 +36,6 @@ public class Main extends Application
    // test mine & objects
    Random rand = new Random();
    ArrayList<Mine> mines = new ArrayList<>();
-   private int mineListSize = 5;
-
-   Mine testMine = new Mine(rand.nextInt(600), rand.nextInt(600));
 
    public void start(Stage stage)
    {
@@ -56,7 +52,10 @@ public class Main extends Application
       {
          System.out.println("file not found");
       }
-      for(int i = 0; i < mineListSize; i++) {
+
+      // draw the first 10 mines
+      for(int i = 0; i < 10; i++)
+      {
          mines.add(new Mine(rand.nextInt(600), rand.nextInt(600)));
       }
 
@@ -130,7 +129,7 @@ public class Main extends Application
          }
       }
    }
-
+   // key listeners
    public class KeyListenerUp implements EventHandler<KeyEvent>  
    {  
       public void handle(KeyEvent event) 
@@ -154,7 +153,6 @@ public class Main extends Application
          }
       }
    }
-
    public class KeyListenerDown implements EventHandler<KeyEvent>  
    {  
       public void handle(KeyEvent event) 
@@ -179,11 +177,30 @@ public class Main extends Application
       }
    }
 
+   public void addMines(ArrayList<Mine> m, Player p, int distance)
+   {
+      // get player position
+      int x = (int)p.getX();
+      int y = (int)p.getY();
+
+      // player grid position
+      int pGridx = (int)(p.getX() / 100);
+      int pGridy = (int)(p.getY() / 100);
+
+      // gridx + 3 and gridx - 4 spawn mines
+      // gridy + 3 and gridy - 4 spawn mines
+
+      int spawnRate = rand.nextInt(20);
+      if(spawnRate == 0)
+         m.add(new Mine(rand.nextInt(x + 320, x + 350), rand.nextInt(y - 300, y + 300)));
+   }
+
    public class AnimationHandler extends AnimationTimer
    {
       public void handle(long currentTimeInNanoSeconds) 
       {
-         if(!mines.get(1).checkCollision(thePlayer))
+         // run gameplay loop as long as the player has not collided with a mine
+         if(!thePlayer.didCollide(mines))
          {
             thePlayer.act();
             // calculate player distance
@@ -191,7 +208,7 @@ public class Main extends Application
             double ySquared = Math.pow(thePlayer.getY() - 300, 2);
             int distance = (int)Math.sqrt(xSquared + ySquared);
 
-            statsLabel.setText("Score: " + distance + "\nHigh Score: " + highScoreVar);
+            statsLabel.setText("Score: " + distance + "\nHigh Score: " + highScoreVar + "\nMines: " + mines.size());
             // Accessing WASD command inputs
             // System.out.println("\nW: " + thePlayer.getWReleased() + "\nA: " + thePlayer.getAReleased() + "\nS: " + thePlayer.getSReleased() + "\nD: " + thePlayer.getDReleased());
 
@@ -207,8 +224,12 @@ public class Main extends Application
             thePlayer.draw(300,300,gc,true); //all other objects will use false in the parameter.
 
             //example call of a draw where m is a non-player object. Note that you are passing the player's position in and not m's position.
-            testMine.draw(thePlayer.getX(),thePlayer.getY(),gc,false);
-            for(int i = 0; i < mineListSize; i++) {
+            addMines(mines, thePlayer, distance);
+
+            for(int i = 0; i < mines.size(); i++)
+            {
+               // remove mines that are out of bounds of player and draw the new mines
+               mines.get(i).checkOutOfBounds(mines, thePlayer);
                mines.get(i).draw(thePlayer.getX(),thePlayer.getY(),gc,false);
             }
          }

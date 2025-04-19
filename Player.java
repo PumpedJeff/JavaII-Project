@@ -108,6 +108,7 @@ public class Player extends DrawableObject
         }
     }
 
+    // player movement
     public void moveDown()
     {
         forceY = Math.round((forceY + 0.1) * 10);
@@ -145,6 +146,7 @@ public class Player extends DrawableObject
         }
     }
 
+    // collision detectors
     public boolean checkCollision(Mine m)
     {
         int collisionDistance = m.getRadius() + this.getRadius();
@@ -156,24 +158,21 @@ public class Player extends DrawableObject
         }
         return false;
     }
-    /*
-    public boolean checkListCollision(ArrayList<Mine> m)
+    public boolean didCollide(ArrayList<Mine> m)
     {
+        // iterate over the whole arraylist and check all distances
         for(int i = 0; i < m.size(); i++)
         {
-            int collisionDistance = m.get(i).getRadius() + this.getRadius();
-            // if the distance between the player and the mine are less than the collisionDistance, collide
-            if(this.distance(m.get(i)) <= collisionDistance)
+            // if any have collided with the player(this) return true
+            // uses checkCollision from Mine class
+            if(m.get(i).checkCollision(this))
             {
-                // end game screen
                 return true;
             }
-            return false;
         }
+        // else always return false to continue gameplay loop
         return false;
     }
-
-     */
 
     // accessors
     public int getRadius(){return this.radius;}
@@ -185,6 +184,7 @@ public class Player extends DrawableObject
     public boolean getDReleased(){return this.D_released;}
     public boolean getSReleased(){return this.S_released;}
 
+    // key released methods
     public void flipKey(String key)
     {
         //if key true, make false, vice versa
