@@ -184,15 +184,25 @@ public class Main extends Application
       int y = (int)p.getY();
 
       // player grid position
-      int pGridx = (int)(p.getX() / 100);
-      int pGridy = (int)(p.getY() / 100);
+      int pGridx = x / 100;
+      int pGridy = y / 100;
 
-      // gridx + 3 and gridx - 4 spawn mines
-      // gridy + 3 and gridy - 4 spawn mines
-
+      // spawning mines close to player based on the direction
       int spawnRate = rand.nextInt(20);
       if(spawnRate == 0)
-         m.add(new Mine(rand.nextInt(x + 320, x + 350), rand.nextInt(y - 300, y + 300)));
+      {
+         if(p.getForceX() > 0)
+            m.add(new Mine(rand.nextInt(x + 320, x + 350), rand.nextInt(y - 300, y + 300)));
+
+         if(p.getForceX() < 0)
+            m.add(new Mine(rand.nextInt(x - 350, x - 320), rand.nextInt(y - 300, y + 300)));
+
+         if(p.getForceY() > 0)
+            m.add(new Mine(rand.nextInt(x - 300, x + 300), rand.nextInt(y + 320, y + 350)));
+
+         if(p.getForceY() < 0)
+            m.add(new Mine(rand.nextInt(x - 300, x + 300), rand.nextInt(y - 350, y - 320)));
+      }
    }
 
    public class AnimationHandler extends AnimationTimer
@@ -208,12 +218,15 @@ public class Main extends Application
             double ySquared = Math.pow(thePlayer.getY() - 300, 2);
             int distance = (int)Math.sqrt(xSquared + ySquared);
 
-            statsLabel.setText("Score: " + distance + "\nHigh Score: " + highScoreVar + "\nMines: " + mines.size());
+            statsLabel.setText("Score: " + distance + "\nHigh Score: " + highScoreVar);
             // Accessing WASD command inputs
             // System.out.println("\nW: " + thePlayer.getWReleased() + "\nA: " + thePlayer.getAReleased() + "\nS: " + thePlayer.getSReleased() + "\nD: " + thePlayer.getDReleased());
 
             // Accessing ForceX + Y and XY positions
             // System.out.println("\nForceX: " + thePlayer.getForceX() + "\nForceY: " + thePlayer.getForceY() + "\nX: " + thePlayer.getX() + "\nY: " + thePlayer.getY());
+
+            // accessing mines and grid quadrants
+            // "\nMines: " + mines.size() + "\ngrid x: " + (int)thePlayer.getX() / 100 + "\ngrid y: " + (int)thePlayer.getY() / 100
 
             gc.clearRect(0,0,600,600);
 
@@ -233,6 +246,17 @@ public class Main extends Application
                mines.get(i).draw(thePlayer.getX(),thePlayer.getY(),gc,false);
             }
          }
+         /*
+         try
+         {
+            FileWriter writeHighScore = new FileWriter("high_score.txt");
+            writeHighScore.write(distance);
+            writeHighScore.close();
+         } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+         }
+          */
       }
    }
    public static void main(String[] args)
