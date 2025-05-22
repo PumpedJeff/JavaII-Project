@@ -30,7 +30,7 @@ public class Player extends DrawableObject
         gc.setFill(Color.LIME);
         gc.fillOval(x - radius,y - radius,diameter,diameter);
         gc.setFill(Color.GRAY);
-        //gc.fillOval(x-radius,y-radius,diameter - 1,diameter - 1);
+        gc.fillOval(x - radius + 5,y - radius + 5,diameter - 10,diameter - 10);
     }
 
     public void act()
@@ -183,6 +183,10 @@ public class Player extends DrawableObject
     public boolean getWReleased(){return this.W_released;}
     public boolean getDReleased(){return this.D_released;}
     public boolean getSReleased(){return this.S_released;}
+
+    // set force
+    public void setForceX(double forceX){this.forceX = forceX;}
+    public void setForceY(double forceY){this.forceY = forceY;}
 
     // key released methods
     public void flipKey(String key)

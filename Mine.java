@@ -41,23 +41,6 @@ public class Mine extends DrawableObject
       // else always return false
       return false;
    }
-   // if a mine is close enough to the player, add it at a random location
-   // right outside the map before the player gets there
-   /*
-   public void addMine(ArrayList<Mine> m, Player p)
-   {
-      double forceX = p.getForceX();
-      double forceY = p.getForceY();
-
-      int x = (int)p.getX();
-      int y = (int)p.getY();
-
-      if(forceX > 0)
-         m.add(new Mine(rand.nextInt(x + 310, x + 330), rand.nextInt(y - 300, y + 300)));
-   }
-
-    */
-
    // if a mine is out of bounds, remove
    public void checkOutOfBounds(ArrayList<Mine> m, Player p)
    {
@@ -66,6 +49,7 @@ public class Mine extends DrawableObject
          m.remove(this);
       }
    }
+
    // accessors
    public int getRadius(){return radius;}
    public int getDiameter(){return diameter;}

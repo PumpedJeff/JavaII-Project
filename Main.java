@@ -39,20 +39,6 @@ public class Main extends Application
 
    public void start(Stage stage)
    {
-      // GETTING THE HIGH SCORE
-      try
-      {
-         File highScore = new File("high_score.txt");
-         Scanner scan = new Scanner(highScore);
-
-         String highScoreStr = scan.nextLine();
-         highScoreVar = Integer.parseInt(highScoreStr);
-      }
-      catch(FileNotFoundException e)
-      {
-         System.out.println("file not found");
-      }
-
       // draw the first 10 mines
       for(int i = 0; i < 10; i++)
       {
@@ -209,14 +195,32 @@ public class Main extends Application
    {
       public void handle(long currentTimeInNanoSeconds) 
       {
+         // GETTING THE HIGH SCORE
+         try
+         {
+            File highScore = new File("high_score.txt");
+            Scanner scan = new Scanner(highScore);
+
+            String highScoreStr = scan.nextLine();
+            highScoreVar = Integer.parseInt(highScoreStr);
+         }
+         catch(FileNotFoundException e)
+         {
+            System.out.println("file not found");
+         }
+
+         // initialize variables outside the loop
+         double xSquared = Math.pow(thePlayer.getX() - 300, 2);
+         double ySquared = Math.pow(thePlayer.getY() - 300, 2);
+         int distance = (int)Math.sqrt(xSquared + ySquared);
          // run gameplay loop as long as the player has not collided with a mine
          if(!thePlayer.didCollide(mines))
          {
             thePlayer.act();
             // calculate player distance
-            double xSquared = Math.pow(thePlayer.getX() - 300, 2);
-            double ySquared = Math.pow(thePlayer.getY() - 300, 2);
-            int distance = (int)Math.sqrt(xSquared + ySquared);
+            xSquared = Math.pow(thePlayer.getX() - 300, 2);
+            ySquared = Math.pow(thePlayer.getY() - 300, 2);
+            distance = (int)Math.sqrt(xSquared + ySquared);
 
             statsLabel.setText("Score: " + distance + "\nHigh Score: " + highScoreVar);
             // Accessing WASD command inputs
@@ -246,17 +250,30 @@ public class Main extends Application
                mines.get(i).draw(thePlayer.getX(),thePlayer.getY(),gc,false);
             }
          }
-         /*
-         try
+         else
          {
-            FileWriter writeHighScore = new FileWriter("high_score.txt");
-            writeHighScore.write(distance);
-            writeHighScore.close();
-         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            // write the high score
+            try
+            {
+               FileWriter fw = new FileWriter("high_score.txt");
+               if(distance > highScoreVar) {
+                  fw.write(distance + "");
+               }
+               else
+               {
+                  fw.write(highScoreVar + "");
+               }
+               fw.close();
+            }
+            catch(Exception e)
+            {
+               System.out.println("Cannot write to high_score file");
+            }
+            thePlayer.setX(0);
+            thePlayer.setY(0);
+            thePlayer.setForceX(0);
+            thePlayer.setForceY(0);
          }
-          */
       }
    }
    public static void main(String[] args)
